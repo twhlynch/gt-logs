@@ -41,14 +41,14 @@ export default {
 				return new Response('invalid action', { headers, status: 400 });
 			}
 
-			const timestamp = Math.floor(Date.now() / 1000);
+			const timestamp = Math.floor(Date.now() / 1000 / 10);
 
 			await env.gt_logs
 				.prepare(
 					`INSERT INTO logs (timestamp, action, user_id, user_name, level_id)
 				VALUES (?, ?, ?, ?, ?)`,
 				)
-				.bind(timestamp, action, user_id, user_name, level_id)
+				.bind(timestamp, actionIndex, user_id, user_name, level_id)
 				.run();
 
 			return new Response('Success', { headers, status: 200 });
