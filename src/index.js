@@ -8,10 +8,11 @@ export default {
 		});
 
 		let allowed = false;
-		const allowedOrigins = /\.grab-tools\.live$/;
-		const origin = request.headers.origin;
-		if (origin && allowedOrigins.some((pattern) => pattern.test(origin))) {
-			res.setHeader('Access-Control-Allow-Origin', origin);
+		const origin = request.headers.get('Origin');
+		const hostname = new URL(origin).hostname;
+		const domain = hostname.split('.').slice(-2).join('.');
+		if (domain == 'grab-tools.live') {
+			headers.set('Access-Control-Allow-Origin', origin);
 			allowed = true;
 		}
 
@@ -19,7 +20,7 @@ export default {
 			if (allowed) {
 				return new Response(null, { headers });
 			}
-			return new Response('Not allowed', { status: 403 });
+			return new Response('Not allowed', { headers, status: 403 });
 		}
 
 		if (request.method !== 'POST') {
@@ -37,21 +38,22 @@ export default {
 			const actions = ['LOGIN', 'LOGOUT', 'MIMIC', 'DOWNLOAD', 'EDIT', 'BLOCKED'];
 			const actionIndex = actions.indexOf(action.toUpperCase());
 			if (actionIndex === -1) {
-				return new Response('invalid action', { status: 400 });
+				return new Response('invalid action', { headers, status: 400 });
 			}
 
 			const timestamp = Math.floor(Date.now() / 1000);
 
-			await env.gt_logs.prepare(
-				`INSERT INTO logs (timestamp, action, user_id, user_name, level_id)
+			await env.gt_logs
+				.prepare(
+					`INSERT INTO logs (timestamp, action, user_id, user_name, level_id)
 				VALUES (?, ?, ?, ?, ?)`,
-			)
+				)
 				.bind(timestamp, action, user_id, user_name, level_id)
 				.run();
 
-			return new Response('Success', { status: 200 });
+			return new Response('Success', { headers, status: 200 });
 		} catch (err) {
-			return new Response('Error: ' + err.message, { status: 500 });
+			return new Response('Error: ' + err.message, { headers, status: 500 });
 		}
 	},
 };
