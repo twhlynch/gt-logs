@@ -6,7 +6,9 @@
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
-		"test": "vitest"
+		"test": "vitest",
+		"reset": "wrangler d1 migrations apply gt-logs && wrangler d1 execute gt-logs --command 'DELETE FROM logs'",
+		"reset-remote": "wrangler d1 migrations apply gt-logs --remote && wrangler d1 execute gt-logs --command 'DELETE FROM logs' --remote"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.8.19",

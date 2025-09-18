@@ -9,7 +9,14 @@
 	"compatibility_date": "2025-09-18",
 	"observability": {
 		"enabled": true
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "gt_logs",
+			"database_name": "gt-logs",
+			"database_id": "50d6626b-8f31-4170-9e76-fb0479defee7"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
