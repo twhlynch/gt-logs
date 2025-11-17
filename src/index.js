@@ -11,7 +11,7 @@ export default {
 		const origin = request.headers.get('Origin');
 		const hostname = new URL(origin).hostname;
 		const domain = hostname.split('.').slice(-2).join('.');
-		if (domain == 'grab-tools.live') {
+		if (domain == 'grab-tools.live' || domain == 'grabvr.tools') {
 			headers.set('Access-Control-Allow-Origin', origin);
 			allowed = true;
 		}
